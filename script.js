@@ -1,3 +1,18 @@
+// Ensure page refreshes always start at the top (Home)
+if (history.scrollRestoration) {
+  history.scrollRestoration = 'manual';
+}
+// Check if the page is being reloaded, rather than navigated to via a hash link
+const isReload = performance.getEntriesByType("navigation").some(nav => nav.type === "reload") || 
+                 (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
+
+if (isReload) {
+  window.scrollTo(0, 0);
+  if (window.location.hash) {
+    history.replaceState(null, null, window.location.pathname);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      1. State Management
