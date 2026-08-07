@@ -228,15 +228,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Event Listeners on window for smooth screen-space dragging
       window.addEventListener('resize', onWindowResize, false);
-      window.addEventListener('mousedown', onPointerDown, false);
-      window.addEventListener('mousemove', onPointerMove, false);
-      window.addEventListener('mouseup', onPointerUp, false);
       window.addEventListener('mouseleave', onPointerLeave, false);
       window.addEventListener('mouseenter', onPointerEnter, false);
+
+      const attachInteractionListeners = () => {
+          window.addEventListener('mousedown', onPointerDown, false);
+          window.addEventListener('mousemove', onPointerMove, false);
+          window.addEventListener('mouseup', onPointerUp, false);
+          window.addEventListener('touchstart', onPointerDown, { passive: false });
+          window.addEventListener('touchmove', onPointerMove, { passive: false });
+          window.addEventListener('touchend', onPointerUp, false);
+      };
       
-      window.addEventListener('touchstart', onPointerDown, { passive: false });
-      window.addEventListener('touchmove', onPointerMove, { passive: false });
-      window.addEventListener('touchend', onPointerUp, false);
+      const detachInteractionListeners = () => {
+          window.removeEventListener('mousedown', onPointerDown, false);
+          window.removeEventListener('mousemove', onPointerMove, false);
+          window.removeEventListener('mouseup', onPointerUp, false);
+          window.removeEventListener('touchstart', onPointerDown);
+          window.removeEventListener('touchmove', onPointerMove);
+          window.removeEventListener('touchend', onPointerUp);
+      };
+
+      let isCanvasInteractionEnabled = false;
+      const interactionToggle = document.getElementById('interaction-toggle');
+      if (interactionToggle) {
+          interactionToggle.addEventListener('click', (e) => {
+              e.preventDefault();
+              isCanvasInteractionEnabled = !isCanvasInteractionEnabled;
+              interactionToggle.innerText = `Interact: ${isCanvasInteractionEnabled ? 'ON' : 'OFF'}`;
+              if (isCanvasInteractionEnabled) {
+                  attachInteractionListeners();
+              } else {
+                  detachInteractionListeners();
+              }
+          });
+      }
   }
 
   function createOctopusGeometry() {
