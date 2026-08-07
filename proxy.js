@@ -234,9 +234,14 @@ document.addEventListener('DOMContentLoaded', () => {
           window.removeEventListener('touchend', onPointerUp);
       };
 
-      let isCanvasInteractionEnabled = false;
+      let isCanvasInteractionEnabled = window.innerWidth > 768;
       const interactionToggle = document.getElementById('interaction-toggle');
       if (interactionToggle) {
+          interactionToggle.innerText = `Interact: ${isCanvasInteractionEnabled ? 'ON' : 'OFF'}`;
+          if (isCanvasInteractionEnabled) {
+              attachInteractionListeners();
+          }
+
           interactionToggle.addEventListener('click', (e) => {
               e.preventDefault();
               isCanvasInteractionEnabled = !isCanvasInteractionEnabled;
