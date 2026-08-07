@@ -360,8 +360,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function onPointerDown(e) {
       if (e.target.closest('button, a, .physics-widget, .experience-card, #terminal-window')) return;
-      isDragging = true;
+      
       isIgnited = !isIgnited; // Toggle color state
+      
+      // Prevent proxy rotation dragging on mobile touch so the user can scroll the page
+      if (e.touches) return; 
+
+      isDragging = true;
       const pos = getPointerPos(e);
       previousMousePosition = { x: pos.x, y: pos.y };
       document.body.style.cursor = 'grabbing';
